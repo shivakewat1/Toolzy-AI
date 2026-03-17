@@ -4,7 +4,7 @@ import { assets } from '../assets/assets'
 const Footer = () => {
   return (
    
-        <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 mt-20">
+        <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 mt-20 bg-[#F4F7FB]">
             <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/30 pb-6">
                 <div className="md:max-w-96">
                     <img src={assets.logo}/>
@@ -35,7 +35,7 @@ const Footer = () => {
                 </div>
             </div>
             <p className="pt-4 text-center text-xs md:text-sm pb-5">
-                Copyright 202 © Shiva Kewat <a href="/">Toolzy AI</a>. All Right Reserved.
+                Copyright 2026 © Shiva Kewat <a href="/">Toolzy AI</a>. All Right Reserved.
             </p>
         </footer>
 
