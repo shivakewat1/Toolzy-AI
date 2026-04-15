@@ -1,111 +1,124 @@
-import React, {useState}from 'react'
-import {Sparkles ,Edit, Hash} from 'lucide-react'
-import  toast  from "react-hot-toast";
-import Markdown from 'react-markdown';
-import { useAuth } from '@clerk/clerk-react';
+import React, { useState } from 'react'
+import { Sparkles, Hash, Copy, Check } from 'lucide-react'
+import toast from 'react-hot-toast'
+import Markdown from 'react-markdown'
+import { useAuth } from '@clerk/clerk-react'
 import axios from 'axios'
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
+const blogCategories = ['General', 'Technology', 'Business', 'Health', 'Lifestyle', 'Education', 'Travel', 'Food']
+
 const BlogTitle = () => {
+    const [selectedCategory, setSelectedCategory] = useState('General')
+    const [input, setInput] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [content, setContent] = useState('')
+    const [copied, setCopied] = useState(false)
+    const { getToken } = useAuth()
 
-   const blogCategories = [ 'General', 'Technology', 'Business' , 'Health', 'Lifestyle', 'Education', 'Travel', 'Food'
-      
-    ]
-  
-    const [selectedCategory,setSelectedCategory] = useState('General')
-    const [input ,setInput] = useState('')
-    const [loading ,setLoading] = useState(false)
-    const [content,setContent] = useState('')
-
-    const {getToken}= useAuth()
-
-    const onSubmitHandler = async (e)=>{
-      e.preventDefault();
-    try{
-      setLoading(true)
-      const prompt = `Generate a blog title for the keyword ${input} in the category ${selectedCategory}`
-     
-      const {data} = await axios.post('/api/ai/generate-blog-title',{prompt},
-        {headers : {Authorization:`Bearer ${await getToken()}`}} 
-      )
-      if(data.success){
-        setContent(data.content)
-      } else{
-        toast.error(data.message)
-      }
-
-    } catch (error){
-      toast.error(error.message)
-
+    const onSubmitHandler = async (e) => {
+        e.preventDefault()
+        try {
+            setLoading(true)
+            const prompt = `Generate a blog title for the keyword ${input} in the category ${selectedCategory}`
+            const { data } = await axios.post('/api/ai/generate-blog-title', { prompt },
+                { headers: { Authorization: `Bearer ${await getToken()}` } }
+            )
+            if (data.success) setContent(data.content)
+            else toast.error(data.message)
+        } catch (error) {
+            toast.error(error.message)
+        }
+        setLoading(false)
     }
-    setLoading(false)
-  
-  }
-  return (
-    <div className='h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
-      {/* left col */}
 
-      <form onSubmit={onSubmitHandler} className='w-full max-w-lg p-4 bg-white rounded-lg border border-gray-200'>
-          <div className='flex items-center gap-3'>
-            <Sparkles className='w-6 text-[#8E37EB]' />
-            <h1 className='text-xl font-semibold'>AI Title Generator</h1>
-          </div>
-          <p className='mt-6 text-sm font-medium'>Keyword</p>
-          <input onChange={(e)=>setInput(e.target.value)} value={input} type='text' className='w-full p-2 px-3 mt-2 outline-none text-sm rounded-md border border-gray-300' placeholder='The future of AI is....' required />
+    const handleCopy = () => {
+        navigator.clipboard.writeText(content)
+        setCopied(true)
+        toast.success('Copied!')
+        setTimeout(() => setCopied(false), 2000)
+    }
 
-          <p className='mt-4 text-sm font-medium'>Category</p>
-          <div className='mt-3 flex gap-3 flex-wrap sm:max-w-9/11'>
-            {blogCategories.map((item)=>(
-              <span onClick={()=>setSelectedCategory(item)} 
-              className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedCategory == item ? 'bg-purple-50 text-purple-700' : 'text-gray-500 border-gray-300'}`}
-               key={item}>{item}</span>
-            ))}
-          </div>
-          <br/>
-          <button disabled={loading} className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#C341F6] to-[#8E37EB] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
-             {
-                          loading ? <span className='w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin'></span>
-                          : <Hash className='w-5' />
-                        }
-            
-            Generate title
-          </button>
-      </form>
+    return (
+        <div className='h-full overflow-y-scroll bg-[#F4F7FB] p-6'>
+            <div className='max-w-6xl'>
+                <div className='mb-6'>
+                    <h1 className='text-2xl font-bold text-slate-800'>Blog Title Generator</h1>
+                    <p className='text-sm text-gray-400 mt-1'>Generate catchy blog titles for any keyword and category</p>
+                </div>
 
-      {/* right col */}
+                <div className='flex items-start gap-5 flex-wrap lg:flex-nowrap'>
+                    <form onSubmit={onSubmitHandler} className='w-full lg:w-80 shrink-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-6'>
+                        <div className='flex items-center gap-2.5 mb-6'>
+                            <div className='w-8 h-8 rounded-lg bg-[#5044E5]/10 flex items-center justify-center'>
+                                <Sparkles className='w-4 h-4 text-[#5044E5]' />
+                            </div>
+                            <h2 className='font-semibold text-slate-800'>Configuration</h2>
+                        </div>
 
-      <div className='w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 '>
-            <div className='flex items-center gap-3'>
-              <Hash className='w-5 h-5 text-[#8E37EB]'/>
-              <h1 className='text-xl font-semibold'>Generated Titles</h1>
-            </div>
+                        <label className='block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2'>Keyword</label>
+                        <input
+                            onChange={(e) => setInput(e.target.value)}
+                            value={input} type='text'
+                            className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-200 outline-none focus:border-[#5044E5] focus:ring-2 focus:ring-[#5044E5]/10 transition'
+                            placeholder='e.g. artificial intelligence'
+                            required
+                        />
 
-            {
-              !content ? (
-                <div className='flex-1 flex justify-center items-center'>
-              <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
-                 <Hash className='w-9 h-9 '/>
-                 <p>Enter a topic and click "Generate Title " to get started</p>
-              </div>
-            </div>
-               ):(
-                <div className='mt-3 h-full overflow-y-scroll text-sm text-slate-600'>
-                
-                              <div>
-                                <Markdown>{content}</Markdown>
-                              
-                              </div>  
-                
+                        <label className='block text-xs font-semibold text-gray-500 uppercase tracking-wide mt-5 mb-3'>Category</label>
+                        <div className='flex flex-wrap gap-2'>
+                            {blogCategories.map((item) => (
+                                <span
+                                    key={item}
+                                    onClick={() => setSelectedCategory(item)}
+                                    className={`text-xs px-3 py-1.5 rounded-xl border cursor-pointer transition-all duration-150 ${
+                                        selectedCategory === item
+                                            ? 'border-[#5044E5] bg-[#5044E5]/5 text-[#5044E5]'
+                                            : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                                    }`}
+                                >{item}</span>
+                            ))}
+                        </div>
+
+                        <button disabled={loading} className='w-full mt-6 flex justify-center items-center gap-2 bg-[#5044E5] hover:bg-[#4038CC] disabled:opacity-60 text-white py-3 rounded-xl text-sm font-medium transition cursor-pointer shadow-[0_4px_12px_rgba(80,68,229,0.3)]'>
+                            {loading ? <span className='w-4 h-4 rounded-full border-2 border-white/40 border-t-white animate-spin' /> : <Hash className='w-4 h-4' />}
+                            {loading ? 'Generating...' : 'Generate Titles'}
+                        </button>
+                    </form>
+
+                    <div className='flex-1 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col min-h-[500px]'>
+                        <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100'>
+                            <div className='flex items-center gap-2.5'>
+                                <div className='w-8 h-8 rounded-lg bg-[#5044E5]/10 flex items-center justify-center'>
+                                    <Hash className='w-4 h-4 text-[#5044E5]' />
                                 </div>
-               )
-            }
-
-            
-      </div>
-
-    </div>
-  )
+                                <h2 className='font-semibold text-slate-800'>Generated Titles</h2>
+                            </div>
+                            {content && (
+                                <button onClick={handleCopy} className='flex items-center gap-1.5 text-xs text-gray-400 hover:text-[#5044E5] transition cursor-pointer'>
+                                    {copied ? <Check className='w-3.5 h-3.5' /> : <Copy className='w-3.5 h-3.5' />}
+                                    {copied ? 'Copied' : 'Copy'}
+                                </button>
+                            )}
+                        </div>
+                        {!content ? (
+                            <div className='flex-1 flex flex-col items-center justify-center text-center p-8'>
+                                <div className='w-14 h-14 rounded-2xl bg-[#5044E5]/5 flex items-center justify-center mb-4'>
+                                    <Hash className='w-6 h-6 text-[#5044E5]/30' />
+                                </div>
+                                <p className='text-sm text-gray-400'>Enter a keyword and click Generate to get started</p>
+                            </div>
+                        ) : (
+                            <div className='flex-1 overflow-y-auto p-6 text-sm text-slate-600 leading-relaxed reset-tw'>
+                                <Markdown>{content}</Markdown>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default BlogTitle
