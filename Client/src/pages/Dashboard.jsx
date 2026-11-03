@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Sparkles, Gem, ArrowRight } from 'lucide-react'
+import { Sparkles, Gem, ArrowRight, Cpu, Plus } from 'lucide-react'
 import { Protect, useAuth, useUser } from '@clerk/clerk-react'
 import CreationItem from '../components/CreationItem'
 import axios from 'axios'
@@ -36,76 +36,164 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <div className='h-full overflow-y-scroll bg-[#F4F7FB] p-6'>
-            <div className='max-w-4xl'>
+        <div className='min-h-full bg-[#F8F7F4] p-6 sm:p-8 lg:p-10'>
+            <div className='max-w-5xl mx-auto'>
 
-                {/* welcome banner */}
-                <div className='relative overflow-hidden bg-[#5044E5] rounded-2xl p-6 mb-6 shadow-[0_8px_32px_rgba(80,68,229,0.25)]'>
-                    <div className='absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none' />
-                    <div className='absolute bottom-0 right-20 w-32 h-32 bg-[#7C6FF7]/40 rounded-full blur-xl pointer-events-none' />
+                {/* Editorial Welcome Banner */}
+                <div className='relative overflow-hidden bg-[#0A0A0C] border border-neutral-800 rounded-3xl p-7 sm:p-9 mb-8 shadow-2xl'>
+                    {/* Ambient subtle glow & grid */}
+                    <div className='absolute -top-16 -right-16 w-80 h-80 bg-[#FF5520]/15 rounded-full blur-3xl pointer-events-none' />
+                    <div className='absolute -bottom-16 -left-16 w-64 h-64 bg-white/[0.02] rounded-full blur-2xl pointer-events-none' />
+                    <div className='absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-50' />
+
                     <div className='relative z-10'>
-                        <p className='text-white/70 text-sm mb-1'>Welcome back,</p>
-                        <h1 className='text-white text-2xl font-bold'>{user?.firstName || 'Creator'} 👋</h1>
-                        <p className='text-white/60 text-sm mt-1'>Here's what you've been building.</p>
+                        {/* Live indicator badge */}
+                        <div className='flex items-center gap-2 mb-3'>
+                            <span className='w-2 h-2 rounded-full bg-[#FF5520] animate-pulse'></span>
+                            <span className='text-xs uppercase tracking-wider text-[#FF5520] font-semibold'>
+                                Toolzy Core Stack • Online
+                            </span>
+                        </div>
+
+                        {/* Heading */}
+                        <h1 className='font-display text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight uppercase leading-none'>
+                            Welcome Back, <span className='text-neutral-300'>{user?.firstName || 'Creator'}</span>
+                        </h1>
+                        <p className='text-neutral-400 text-sm mt-3 max-w-xl font-normal leading-relaxed'>
+                            Your generative workspace is primed. Inspect your recent generations below or launch a new creative session.
+                        </p>
+
+                        {/* Quick action buttons */}
+                        <div className='flex items-center gap-3 mt-6 flex-wrap'>
+                            <button
+                                onClick={() => navigate('/ai/generate-images')}
+                                className='flex items-center gap-2 bg-[#FF5520] hover:bg-[#e04818] text-white text-xs uppercase tracking-wider font-semibold px-5 py-3 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer group'
+                            >
+                                <Plus className='w-4 h-4' />
+                                <span>Create New Content</span>
+                                <ArrowRight className='w-3.5 h-3.5 transition-transform group-hover:translate-x-1' />
+                            </button>
+                            <button
+                                onClick={() => navigate('/ai/write-article')}
+                                className='flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.12] text-neutral-200 border border-white/10 text-xs uppercase tracking-wider font-semibold px-4 py-3 rounded-xl transition-all cursor-pointer'
+                            >
+                                <span>Draft AI Article</span>
+                            </button>
+                        </div>
                     </div>
-                    <button
-                        onClick={() => navigate('/ai/generate-images')}
-                        className='relative z-10 mt-4 flex items-center gap-2 bg-white text-[#5044E5] text-sm font-semibold px-4 py-2 rounded-xl hover:bg-white/90 transition cursor-pointer w-fit'
-                    >
-                        Create something new <ArrowRight className='w-4 h-4' />
-                    </button>
                 </div>
 
-                {/* stat cards */}
-                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8'>
-                    <div className='bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center justify-between hover:shadow-md transition-shadow'>
-                        <div>
-                            <p className='text-xs text-gray-400 font-medium uppercase tracking-widest'>Total Creations</p>
-                            <h2 className='text-3xl font-bold text-slate-800 mt-1'>{creation.length}</h2>
+                {/* Stat Cards Bento Grid */}
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-8'>
+                    {/* Card 1: Total Creations */}
+                    <div className='bg-white rounded-2xl border border-neutral-200/90 p-5 shadow-xs hover:border-neutral-300 transition-all flex flex-col justify-between'>
+                        <div className='flex items-center justify-between mb-3'>
+                            <p className='text-xs text-neutral-500 uppercase tracking-wider font-semibold'>
+                                Total Creations
+                            </p>
+                            <div className='w-9 h-9 rounded-xl bg-neutral-900 text-[#FF5520] flex items-center justify-center shadow-xs'>
+                                <Sparkles className='w-4 h-4' />
+                            </div>
                         </div>
-                        <div className='w-12 h-12 rounded-2xl bg-gradient-to-br from-[#5044E5] to-[#7C6FF7] flex items-center justify-center shadow-[0_4px_12px_rgba(80,68,229,0.3)]'>
-                            <Sparkles className='w-5 h-5 text-white' />
-                        </div>
-                    </div>
-
-                    <div className='bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center justify-between hover:shadow-md transition-shadow'>
                         <div>
-                            <p className='text-xs text-gray-400 font-medium uppercase tracking-widest'>Active Plan</p>
-                            <h2 className='text-3xl font-bold text-slate-800 mt-1'>
-                                <Protect plan='premium' fallback='Free'>Premium</Protect>
+                            <h2 className='font-display text-4xl text-neutral-900 tracking-tight'>
+                                {creation.length}
                             </h2>
+                            <p className='text-xs text-neutral-400 mt-1 font-medium'>
+                                Artifacts logged in database
+                            </p>
                         </div>
-                        <div className='w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FF61C5] to-[#9E53EE] flex items-center justify-center shadow-[0_4px_12px_rgba(158,83,238,0.3)]'>
-                            <Gem className='w-5 h-5 text-white' />
+                    </div>
+
+                    {/* Card 2: Active Plan */}
+                    <div className='bg-white rounded-2xl border border-neutral-200/90 p-5 shadow-xs hover:border-neutral-300 transition-all flex flex-col justify-between'>
+                        <div className='flex items-center justify-between mb-3'>
+                            <p className='text-xs text-neutral-500 uppercase tracking-wider font-semibold'>
+                                Membership Tier
+                            </p>
+                            <div className='w-9 h-9 rounded-xl bg-[#FF5520]/10 border border-[#FF5520]/20 text-[#FF5520] flex items-center justify-center'>
+                                <Gem className='w-4 h-4' />
+                            </div>
+                        </div>
+                        <div>
+                            <h2 className='font-display text-4xl text-neutral-900 tracking-tight'>
+                                <Protect plan='premium' fallback='Free Tier'>Premium</Protect>
+                            </h2>
+                            <p className='text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1'>
+                                <span>●</span> Active & Synced
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Card 3: Neural Engines */}
+                    <div className='bg-white rounded-2xl border border-neutral-200/90 p-5 shadow-xs hover:border-neutral-300 transition-all flex flex-col justify-between'>
+                        <div className='flex items-center justify-between mb-3'>
+                            <p className='text-xs text-neutral-500 uppercase tracking-wider font-semibold'>
+                                Active Engines
+                            </p>
+                            <div className='w-9 h-9 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-700 flex items-center justify-center'>
+                                <Cpu className='w-4 h-4' />
+                            </div>
+                        </div>
+                        <div>
+                            <h2 className='font-display text-4xl text-neutral-900 tracking-tight'>
+                                6 / 6
+                            </h2>
+                            <p className='text-xs text-neutral-400 mt-1 font-medium'>
+                                Groq, SD3 & Cloudinary AI
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                {/* recent creations */}
+                {/* Recent Creations Section */}
                 <div>
                     <div className='flex items-center justify-between mb-4'>
-                        <h2 className='text-sm font-semibold text-gray-400 uppercase tracking-widest'>Recent Creations</h2>
+                        <div className='flex items-center gap-2.5'>
+                            <span className='w-2 h-2 rounded-full bg-[#FF5520]'></span>
+                            <h2 className='text-xs font-semibold text-neutral-700 uppercase tracking-wider'>
+                                Recent Workspace Outputs
+                            </h2>
+                        </div>
                         {creation.length > 0 && (
-                            <span className='text-xs text-[#5044E5] font-medium bg-[#5044E5]/10 px-3 py-1 rounded-full'>
-                                {creation.length} total
+                            <span className='text-xs uppercase tracking-wider text-neutral-700 bg-neutral-100 border border-neutral-200/90 px-3 py-1 rounded-full font-semibold'>
+                                {creation.length} {creation.length === 1 ? 'Record' : 'Records'}
                             </span>
                         )}
                     </div>
 
                     {loading ? (
-                        <div className='flex justify-center items-center h-48'>
-                            <span className='w-10 h-10 rounded-full border-[3px] border-[#5044E5] border-t-transparent animate-spin' />
+                        <div className='flex flex-col justify-center items-center h-48 bg-white rounded-2xl border border-neutral-200/80'>
+                            <span className='w-8 h-8 rounded-full border-2 border-neutral-200 border-t-[#FF5520] animate-spin mb-3' />
+                            <p className='text-xs uppercase tracking-wider text-neutral-400 font-medium'>Loading creations...</p>
                         </div>
                     ) : creation.length === 0 ? (
-                        <div className='flex flex-col items-center justify-center h-48 bg-white rounded-2xl border border-dashed border-gray-200'>
-                            <Sparkles className='w-8 h-8 text-[#5044E5]/20 mb-3' />
-                            <p className='text-sm text-gray-400'>No creations yet.</p>
-                            <button
-                                onClick={() => navigate('/ai/write-article')}
-                                className='mt-3 text-xs text-[#5044E5] font-medium hover:underline cursor-pointer'
-                            >
-                                Start creating →
-                            </button>
+                        <div className='flex flex-col items-center justify-center py-16 px-6 bg-white rounded-2xl border border-dashed border-neutral-300 text-center shadow-xs'>
+                            <div className='w-12 h-12 rounded-2xl bg-neutral-50 border border-neutral-200 flex items-center justify-center mb-4 text-[#FF5520]'>
+                                <Sparkles className='w-6 h-6' />
+                            </div>
+                            <h3 className='font-display text-2xl text-neutral-900 uppercase tracking-tight'>
+                                No Output Recorded Yet
+                            </h3>
+                            <p className='text-xs text-neutral-500 max-w-sm mt-1.5 leading-relaxed'>
+                                Start by launching any tool from the sidebar or click below to generate your first AI article or image.
+                            </p>
+                            <div className='flex items-center gap-3 mt-5'>
+                                <button
+                                    onClick={() => navigate('/ai/write-article')}
+                                    className='flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs uppercase tracking-wider font-semibold px-4 py-2.5 rounded-lg transition-all cursor-pointer'
+                                >
+                                    <span>Launch Article Writer</span>
+                                    <ArrowRight className='w-3.5 h-3.5' />
+                                </button>
+                                <button
+                                    onClick={() => navigate('/ai/generate-images')}
+                                    className='flex items-center gap-2 bg-[#FF5520] hover:bg-[#e04818] text-white text-xs uppercase tracking-wider font-semibold px-4 py-2.5 rounded-lg transition-all cursor-pointer'
+                                >
+                                    <span>Generate Image</span>
+                                    <ArrowRight className='w-3.5 h-3.5' />
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <div className='space-y-3'>

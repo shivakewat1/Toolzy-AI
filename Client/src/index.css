@@ -13,6 +13,10 @@
   font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+input, textarea, select, button {
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 .font-display {
   font-family: "Anton", sans-serif !important;
   letter-spacing: 0.015em;
@@ -64,10 +68,126 @@
   animation-play-state: paused;
 }
 
-.reset-tw, .reset-tw * {
-  all: revert !important;
+/* Beautiful, Selectable Markdown Rendering */
+.reset-tw {
+  user-select: text !important;
+  color: #1e293b;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  line-height: 1.75;
+}
+
+.reset-tw * {
+  user-select: text !important;
+}
+
+.reset-tw h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.reset-tw h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+
+.reset-tw h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.reset-tw p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.reset-tw ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  color: #334155;
+}
+
+.reset-tw ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  color: #334155;
+}
+
+.reset-tw li {
+  margin-bottom: 0.35rem;
+  line-height: 1.6;
+}
+
+.reset-tw strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.reset-tw blockquote {
+  border-left: 3px solid #FF5520;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #475569;
+  font-style: italic;
+  background: rgba(255, 85, 32, 0.04);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.reset-tw code {
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  font-family: monospace;
+  font-size: 0.85em;
+}
+
+.reset-tw pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+}
+
+.reset-tw hr {
+  border-color: #e2e8f0;
+  margin: 1.5rem 0;
 }
 
 .cl-drawerRoot {
-  z-index: 10;
+  z-index: 50;
+}
+
+/* Ensure Clerk Modal Popup is always perfectly centered & responsive */
+.cl-modalBackdrop {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  padding: 1rem !important;
+}
+
+.cl-modalContent {
+  margin: auto !important;
+  max-width: 100% !important;
 }

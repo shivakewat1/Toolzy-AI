@@ -49,96 +49,119 @@ const WriteArticle = () => {
     }
 
     return (
-        <div className='h-full overflow-y-scroll bg-[#F4F7FB] p-6'>
-            <div className='max-w-6xl'>
+        <div className='min-h-full bg-[#F8F7F4] p-6 sm:p-8'>
+            <div className='max-w-6xl mx-auto'>
 
                 {/* page header */}
-                <div className='mb-6'>
-                    <h1 className='text-2xl font-bold text-slate-800'>AI Article Writer</h1>
-                    <p className='text-sm text-gray-400 mt-1'>Generate high-quality articles on any topic in seconds</p>
+                <div className='mb-7'>
+                    <div className='flex items-center gap-2 mb-1.5'>
+                        <span className='w-2 h-2 rounded-full bg-[#FF5520]' />
+                        <span className='text-xs uppercase tracking-widest text-neutral-500 font-semibold'>Groq Neural Core</span>
+                    </div>
+                    <h1 className='font-display text-3xl sm:text-4xl text-neutral-900 uppercase tracking-tight'>AI Article Writer</h1>
+                    <p className='text-xs sm:text-sm text-neutral-500 mt-1 max-w-xl font-normal'>
+                        Generate comprehensive, well-structured articles in seconds using high-speed reasoning.
+                    </p>
                 </div>
 
-                <div className='flex items-start gap-5 flex-wrap lg:flex-nowrap'>
+                <div className='flex items-start gap-6 flex-wrap lg:flex-nowrap'>
 
                     {/* left — config */}
-                    <form onSubmit={onSubmitHandler} className='w-full lg:w-80 shrink-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-6'>
+                    <form onSubmit={onSubmitHandler} className='w-full lg:w-84 shrink-0 bg-white rounded-2xl border border-neutral-200/90 shadow-xs p-6'>
 
-                        <div className='flex items-center gap-2.5 mb-6'>
-                            <div className='w-8 h-8 rounded-lg bg-[#5044E5]/10 flex items-center justify-center'>
-                                <Sparkles className='w-4 h-4 text-[#5044E5]' />
+                        <div className='flex items-center gap-2.5 mb-5 pb-4 border-b border-neutral-100'>
+                            <div className='w-8 h-8 rounded-lg bg-[#FF5520]/10 flex items-center justify-center text-[#FF5520]'>
+                                <Sparkles className='w-4 h-4' />
                             </div>
-                            <h2 className='font-semibold text-slate-800'>Configuration</h2>
+                            <div>
+                                <h2 className='font-semibold text-neutral-900 text-sm'>Article Parameters</h2>
+                                <p className='text-[10px] uppercase tracking-wider text-neutral-400 font-medium'>Configure prompt</p>
+                            </div>
                         </div>
 
-                        <label className='block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2'>Article Topic</label>
-                        <input
+                        <label className='block text-xs font-semibold text-neutral-700 uppercase tracking-wide mb-2'>
+                            Topic or Headline
+                        </label>
+                        <textarea
                             onChange={(e) => setInput(e.target.value)}
                             value={input}
-                            type='text'
-                            className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-200 outline-none focus:border-[#5044E5] focus:ring-2 focus:ring-[#5044E5]/10 transition'
-                            placeholder='The future of AI is...'
+                            rows={3}
+                            className='w-full px-3.5 py-2.5 text-sm rounded-xl border border-neutral-200 outline-none focus:border-[#FF5520] focus:ring-2 focus:ring-[#FF5520]/10 transition bg-neutral-50/50 focus:bg-white text-neutral-900 placeholder:text-neutral-400 resize-none'
+                            placeholder='Describe your topic or story prompt...'
                             required
                         />
 
-                        <label className='block text-xs font-semibold text-gray-500 uppercase tracking-wide mt-5 mb-3'>Article Length</label>
+                        <label className='block text-xs font-semibold text-neutral-700 uppercase tracking-wide mt-4 mb-2.5'>
+                            Output Depth
+                        </label>
                         <div className='flex flex-col gap-2'>
                             {articleLengths.map((item) => (
                                 <div
                                     key={item.length}
                                     onClick={() => setSelectedLength(item)}
-                                    className={`flex items-center justify-between px-4 py-3 rounded-xl border cursor-pointer transition-all duration-150 ${
+                                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl border cursor-pointer transition-all duration-150 ${
                                         selectedLength.length === item.length
-                                            ? 'border-[#5044E5] bg-[#5044E5]/5 text-[#5044E5]'
-                                            : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                                            ? 'border-[#FF5520] bg-[#FF5520]/5 text-neutral-900 ring-1 ring-[#FF5520]/20'
+                                            : 'border-neutral-200 text-neutral-600 hover:border-neutral-300 bg-white'
                                     }`}
                                 >
-                                    <span className='text-sm font-medium'>{item.text}</span>
-                                    <span className='text-xs opacity-60'>{item.sub}</span>
+                                    <div className='flex items-center gap-2'>
+                                        <div className={`w-2 h-2 rounded-full ${selectedLength.length === item.length ? 'bg-[#FF5520]' : 'bg-neutral-300'}`} />
+                                        <span className='text-sm font-semibold'>{item.text}</span>
+                                    </div>
+                                    <span className='text-[11px] text-neutral-400 font-medium'>{item.sub}</span>
                                 </div>
                             ))}
                         </div>
 
                         <button
                             disabled={loading}
-                            className='w-full mt-6 flex justify-center items-center gap-2 bg-[#5044E5] hover:bg-[#4038CC] disabled:opacity-60 text-white py-3 rounded-xl text-sm font-medium transition cursor-pointer shadow-[0_4px_12px_rgba(80,68,229,0.3)]'
+                            className='w-full mt-6 flex justify-center items-center gap-2 bg-[#FF5520] hover:bg-[#e04818] disabled:opacity-60 text-white py-3 rounded-xl text-xs uppercase tracking-wider font-semibold transition cursor-pointer shadow-md hover:shadow-lg'
                         >
-                            {loading
-                                ? <span className='w-4 h-4 rounded-full border-2 border-white/40 border-t-white animate-spin' />
-                                : <Sparkles className='w-4 h-4' />
-                            }
-                            {loading ? 'Generating...' : 'Generate Article'}
+                            {loading ? (
+                                <span className='w-4 h-4 rounded-full border-2 border-white/40 border-t-white animate-spin' />
+                            ) : (
+                                <Sparkles className='w-4 h-4' />
+                            )}
+                            {loading ? 'Synthesizing Article...' : 'Generate Article'}
                         </button>
                     </form>
 
                     {/* right — output */}
-                    <div className='flex-1 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col min-h-[500px]'>
-                        <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100'>
+                    <div className='flex-1 w-full bg-white rounded-2xl border border-neutral-200/90 shadow-xs flex flex-col min-h-[520px] max-h-[calc(100vh-210px)] overflow-hidden'>
+                        <div className='flex items-center justify-between px-6 py-4 border-b border-neutral-100 bg-neutral-50/40 shrink-0'>
                             <div className='flex items-center gap-2.5'>
-                                <div className='w-8 h-8 rounded-lg bg-[#5044E5]/10 flex items-center justify-center'>
-                                    <FileText className='w-4 h-4 text-[#5044E5]' />
+                                <div className='w-8 h-8 rounded-lg bg-neutral-900 text-[#FF5520] flex items-center justify-center'>
+                                    <FileText className='w-4 h-4' />
                                 </div>
-                                <h2 className='font-semibold text-slate-800'>Generated Article</h2>
+                                <div>
+                                    <h2 className='font-semibold text-neutral-900 text-sm'>Generated Article</h2>
+                                    <p className='text-[10px] uppercase tracking-wider text-neutral-400 font-medium'>Formatted Output</p>
+                                </div>
                             </div>
                             {content && (
                                 <button
                                     onClick={handleCopy}
-                                    className='flex items-center gap-1.5 text-xs text-gray-400 hover:text-[#5044E5] transition cursor-pointer'
+                                    className='flex items-center gap-1.5 text-xs uppercase tracking-wider text-neutral-600 hover:text-[#FF5520] bg-white border border-neutral-200 px-3 py-1.5 rounded-lg transition-colors cursor-pointer font-semibold shadow-xs'
                                 >
-                                    {copied ? <Check className='w-3.5 h-3.5' /> : <Copy className='w-3.5 h-3.5' />}
-                                    {copied ? 'Copied' : 'Copy'}
+                                    {copied ? <Check className='w-3.5 h-3.5 text-emerald-600' /> : <Copy className='w-3.5 h-3.5' />}
+                                    <span>{copied ? 'Copied' : 'Copy Text'}</span>
                                 </button>
                             )}
                         </div>
 
                         {!content ? (
                             <div className='flex-1 flex flex-col items-center justify-center text-center p-8'>
-                                <div className='w-14 h-14 rounded-2xl bg-[#5044E5]/5 flex items-center justify-center mb-4'>
-                                    <FileText className='w-6 h-6 text-[#5044E5]/30' />
+                                <div className='w-14 h-14 rounded-2xl bg-neutral-100 border border-neutral-200 flex items-center justify-center mb-4 text-[#FF5520]'>
+                                    <FileText className='w-6 h-6' />
                                 </div>
-                                <p className='text-sm text-gray-400'>Enter a topic and click Generate to get started</p>
+                                <h3 className='font-display text-lg text-neutral-900 uppercase'>Awaiting Topic</h3>
+                                <p className='text-xs text-neutral-400 max-w-xs mt-1 leading-relaxed'>
+                                    Enter your topic on the left and trigger generation to view your formatted output here.
+                                </p>
                             </div>
                         ) : (
-                            <div className='flex-1 overflow-y-auto p-6 text-sm text-slate-600 leading-relaxed reset-tw'>
+                            <div className='flex-1 overflow-y-auto p-6 sm:p-8 reset-tw select-text'>
                                 <Markdown>{content}</Markdown>
                             </div>
                         )}
