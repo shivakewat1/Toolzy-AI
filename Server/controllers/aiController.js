@@ -2,9 +2,10 @@ import OpenAI from "openai";
 import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
-import {v2 as cloudinary} from 'cloudinary'
-import fs from 'fs'
+import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';
 import { createRequire } from "module";
+
 const require = createRequire(import.meta.url);
 const { PDFParse } = require("pdf-parse");
 
@@ -14,7 +15,6 @@ const pdfParse = async (buffer) => {
   return result;
 };
 
-
 const AI = new OpenAI({
   apiKey: process.env.GROQ_API_KEY,
   baseURL: "https://api.groq.com/openai/v1"
@@ -22,12 +22,15 @@ const AI = new OpenAI({
 
 export const generateArticle = async (req, res) => {
   try {
-
     const { userId } = req.auth();
     const { prompt, length } = req.body;
 
+    if (!prompt) {
+      return res.json({ success: false, message: "Please provide a prompt" });
+    }
+
     const plan = req.plan;
-    const free_usage = req.free_usage;
+    const free_usage = req.free_usage || 0;
 
     if (plan !== "premium" && free_usage >= 10) {
       return res.json({
@@ -36,8 +39,10 @@ export const generateArticle = async (req, res) => {
       });
     }
 
+    const maxTokens = parseInt(length, 10) || 500;
+
     const response = await AI.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "qwen/qwen3.8-27b",
       messages: [
         {
           role: "user",
@@ -45,7 +50,7 @@ export const generateArticle = async (req, res) => {
         }
       ],
       temperature: 0.7,
-      max_tokens: length
+      max_tokens: maxTokens
     });
 
     const content = response.choices[0].message.content;
@@ -66,7 +71,7 @@ export const generateArticle = async (req, res) => {
     res.json({ success: true, content });
 
   } catch (error) {
-    console.log(error.message);
+    console.error('generateArticle error:', error.message);
     const message = error.status === 429
       ? "API rate limit exceeded. Please wait a moment and try again."
       : error.message;
@@ -74,15 +79,17 @@ export const generateArticle = async (req, res) => {
   }
 };
 
-
 export const generateBlogTitle = async (req, res) => {
   try {
-
     const { userId } = req.auth();
-    const { prompt} = req.body;
+    const { prompt } = req.body;
+
+    if (!prompt) {
+      return res.json({ success: false, message: "Please provide a prompt" });
+    }
 
     const plan = req.plan;
-    const free_usage = req.free_usage;
+    const free_usage = req.free_usage || 0;
 
     if (plan !== "premium" && free_usage >= 10) {
       return res.json({
@@ -92,7 +99,7 @@ export const generateBlogTitle = async (req, res) => {
     }
 
     const response = await AI.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "qwen/qwen3.8-27b",
       messages: [
         {
           role: "user",
@@ -100,7 +107,7 @@ export const generateBlogTitle = async (req, res) => {
         }
       ],
       temperature: 0.7,
-      max_tokens: 100,
+      max_tokens: 150,
     });
 
     const content = response.choices[0].message.content;
@@ -121,17 +128,15 @@ export const generateBlogTitle = async (req, res) => {
     res.json({ success: true, content });
 
   } catch (error) {
-    console.log(error.message);
+    console.error('generateBlogTitle error:', error.message);
     res.json({ success: false, message: error.message });
   }
 };
 
-
 export const generateImage = async (req, res) => {
   try {
-
     const { userId } = req.auth();
-    const { prompt, publish} = req.body;
+    const { prompt, publish } = req.body;
     const plan = req.plan;
 
     if (plan !== "premium") {
@@ -141,22 +146,27 @@ export const generateImage = async (req, res) => {
       });
     }
 
+    if (!prompt) {
+      return res.json({ success: false, message: "Please provide a prompt" });
+    }
+
     const response = await axios.post(
-      "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0",
+      "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-3-medium-diffusers",
       { inputs: prompt },
       {
         headers: { 
-          Authorization: `Bearer ${process.env.HF_API_KEY}`,
+          Authorization: `Bearer ${process.env.HF_API_KEY.trim()}`,
           Accept: "image/png",
           "Content-Type": "application/json"
         },
-        responseType: "arraybuffer"
+        responseType: "arraybuffer",
+        timeout: 60000
       }
     );
 
     const base64Image = `data:image/png;base64,${Buffer.from(response.data).toString('base64')}`;
 
-    const {secure_url} = await cloudinary.uploader.upload(base64Image);
+    const { secure_url } = await cloudinary.uploader.upload(base64Image);
     
     await sql`
       INSERT INTO creations (user_id,prompt,content,type,publish)
@@ -167,135 +177,150 @@ export const generateImage = async (req, res) => {
 
   } catch (error) {
     const errMsg = error.response?.data ? Buffer.from(error.response.data).toString() : error.message;
-    console.log('generateImage error:', errMsg);
+    console.error('generateImage error:', errMsg);
     res.json({ success: false, message: errMsg });
   }
 };
 
-export const  removeImageBackground= async (req, res) => {
+export const removeImageBackground = async (req, res) => {
   try {
-
     const { userId } = req.auth();
     const image = req.file;
     const plan = req.plan;
-    
 
     if (plan !== "premium") {
+      if (image?.path && fs.existsSync(image.path)) fs.unlinkSync(image.path);
       return res.json({
         success: false,
         message: "This Feature is only available for premium Subscriptions"
       });
     }
 
-   
+    if (!image) {
+      return res.json({ success: false, message: "Please upload an image" });
+    }
 
-    
-
-    const {secure_url} = await cloudinary.uploader.upload(image.path,{
-      transformation:[
+    const { secure_url } = await cloudinary.uploader.upload(image.path, {
+      transformation: [
         {
-          effect:'background_removal',
-          background_removal : 'remove_the_background'
+          effect: 'background_removal',
+          background_removal: 'remove_the_background'
         }
       ]
-    })
+    });
+
+    if (fs.existsSync(image.path)) {
+      fs.unlinkSync(image.path);
+    }
     
     await sql`
       INSERT INTO creations (user_id,prompt,content,type)
       VALUES (${userId},'Remove background from image',${secure_url},'image')`;
 
-
-
-    res.json({ success: true, content:secure_url });
+    res.json({ success: true, content: secure_url });
 
   } catch (error) {
-    console.log(error.message);
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    console.error('removeImageBackground error:', error.message);
     res.json({ success: false, message: error.message });
   }
 };
 
-export const  removeImageObject= async (req, res) => {
+export const removeImageObject = async (req, res) => {
   try {
-
     const { userId } = req.auth();
     const { object } = req.body;
     const image = req.file;
     const plan = req.plan;
 
     if (plan !== "premium") {
+      if (image?.path && fs.existsSync(image.path)) fs.unlinkSync(image.path);
       return res.json({
         success: false,
         message: "This Feature is only available for premium Subscriptions"
       });
     }
 
-    // Upload image to cloudinary first
-    const { secure_url } = await cloudinary.uploader.upload(image.path)
+    if (!image) {
+      return res.json({ success: false, message: "Please upload an image" });
+    }
 
-    // Use HF inpainting model to remove object
-    const imageResponse = await axios.get(secure_url, { responseType: 'arraybuffer' })
-    const imageBuffer = Buffer.from(imageResponse.data)
+    if (!object || !object.trim()) {
+      if (fs.existsSync(image.path)) fs.unlinkSync(image.path);
+      return res.json({ success: false, message: "Please specify an object to remove" });
+    }
 
-    const FormData = (await import('form-data')).default
-    const formData = new FormData()
-    formData.append('inputs', imageBuffer, { filename: 'image.png', contentType: 'image/png' })
-    formData.append('parameters', JSON.stringify({ prompt: `remove the ${object}` }))
+    const targetObject = object.trim().split(' ')[0];
 
-    const hfResponse = await axios.post(
-      'https://router.huggingface.co/hf-inference/models/lllyasviel/sd-controlnet-canny',
-      { inputs: `photo without ${object}, clean background` },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.HF_API_KEY}`,
-          Accept: 'image/png',
-          'Content-Type': 'application/json'
-        },
-        responseType: 'arraybuffer'
-      }
-    )
+    // Using Cloudinary AI Generative Remove directly
+    const { secure_url: resultUrl } = await cloudinary.uploader.upload(image.path, {
+      transformation: [
+        {
+          effect: `gen_remove:prompt_${targetObject}`
+        }
+      ]
+    });
 
-    const base64Image = `data:image/png;base64,${Buffer.from(hfResponse.data).toString('base64')}`
-    const { secure_url: resultUrl } = await cloudinary.uploader.upload(base64Image)
+    if (fs.existsSync(image.path)) {
+      fs.unlinkSync(image.path);
+    }
 
     await sql`
       INSERT INTO creations (user_id,prompt,content,type)
-      VALUES (${userId},${`Removed ${object} from image`},${resultUrl},'image')`;
+      VALUES (${userId},${`Removed ${targetObject} from image`},${resultUrl},'image')`;
 
     res.json({ success: true, content: resultUrl });
 
   } catch (error) {
-    console.log(error.message);
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    console.error('removeImageObject error:', error.message);
     res.json({ success: false, message: error.message });
   }
 };
 
-export const  resumeReview = async (req, res) => {
+export const resumeReview = async (req, res) => {
   try {
-
     const { userId } = req.auth();
     const resume = req.file;
     const plan = req.plan;
-    
 
     if (plan !== "premium") {
+      if (resume?.path && fs.existsSync(resume.path)) fs.unlinkSync(resume.path);
       return res.json({
         success: false,
         message: "This Feature is only available for premium Subscriptions"
       });
     }
+
+    if (!resume) {
+      return res.json({ success: false, message: "Please upload a resume" });
+    }
     
-    if(resume.size > 5 * 1024 * 1024){
-      return res.json({success:false,message:"Resume file size exeeds allowed size (5MB)."})
+    if (resume.size > 5 * 1024 * 1024) {
+      if (fs.existsSync(resume.path)) fs.unlinkSync(resume.path);
+      return res.json({ success: false, message: "Resume file size exceeds allowed size (5MB)." });
     }
 
-    const dataBuffer = fs.readFileSync(resume.path)
-    const pdfData = await pdfParse(dataBuffer)
+    const dataBuffer = fs.readFileSync(resume.path);
+    if (fs.existsSync(resume.path)) {
+      fs.unlinkSync(resume.path);
+    }
 
-    const prompt = `Review the following resume and provide constructive feedback on its strengths,weakness and areas for improvement.
-    Resume Content:\n\n ${pdfData.text}`
+    const pdfData = await pdfParse(dataBuffer);
+
+    if (!pdfData || !pdfData.text || !pdfData.text.trim()) {
+      return res.json({ success: false, message: "Could not extract text from the provided PDF." });
+    }
+
+    const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses and areas for improvement.
+Resume Content:\n\n ${pdfData.text.slice(0, 4000)}`;
 
     const response = await AI.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "qwen/qwen3.8-27b",
       messages: [
         {
           role: "user",
@@ -312,12 +337,13 @@ export const  resumeReview = async (req, res) => {
       INSERT INTO creations (user_id,prompt,content,type)
       VALUES (${userId},'Review the Uploaded resume',${content},'resume-review')`;
 
-
-
     res.json({ success: true, content });
 
   } catch (error) {
-    console.log(error.message);
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    console.error('resumeReview error:', error.message);
     res.json({ success: false, message: error.message });
   }
 };

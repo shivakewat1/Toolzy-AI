@@ -83,7 +83,7 @@ const RemoveBackground = () => {
                                 <p className='text-sm text-gray-400'>Upload an image and click Remove Background to get started</p>
                             </div>
                         ) : (
-                            <div className='flex-1 p-4 bg-[url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\'%3E%3Crect width=\'10\' height=\'10\' fill=\'%23e5e7eb\'/%3E%3Crect x=\'10\' y=\'10\' width=\'10\' height=\'10\' fill=\'%23e5e7eb\'/%3E%3C/svg%3E")] rounded-xl'>
+                            <div className='flex-1 p-4 rounded-xl' style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='10' height='10' fill='%23e5e7eb'/%3E%3Crect x='10' y='10' width='10' height='10' fill='%23e5e7eb'/%3E%3C/svg%3E\")" }}>
                                 <img src={content} alt='processed' className='w-full h-full object-contain rounded-xl' />
                             </div>
                         )}

@@ -23,8 +23,10 @@ app.use('/api/user', userRouter)
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log('Server is Running on port', PORT);
-})
+if (!process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log('Server is Running on port', PORT);
+  });
+}
 
 export default app;
