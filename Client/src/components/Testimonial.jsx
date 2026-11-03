@@ -1,103 +1,152 @@
+import React from 'react'
+import { Star } from 'lucide-react'
+
 const Testimonial = () => {
     const testimonials = [
-        { text: "PrebuiltUI helped us move faster without sacrificing design quality. The components feel production-ready.", name: "Cristofer Levin", role: "Frontend engineer", image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200" },
-        { text: "The attention to detail in PrebuiltUI is impressive. Saved me hours of repetitive work and time. Highly recommended.", name: "Rohan Mehta", role: "Startup founder", image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200" },
-        { text: "We were able ship faster using PrebuiltUI. The consistency across components made UI feel polished.", name: "Jason Kim", role: "Product designer", image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&auto=format&fit=crop&q=60" },
-        { text: "PrebuiltUI feels like it was built by people who actually ship products. Components are clean and easy to use.", name: "Alex Turner", role: "Full stack developer", image: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&auto=format&fit=crop&q=60" },
-        { text: "PrebuiltUI helped us maintain design consistency across multiple projects. It's now a core part of design.", name: "Sofia Martinez", role: "UX designer", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&h=100&auto=format&fit=crop" },
-        { text: "Our team productivity improved noticeably after adopting PrebuiltUI. It reduced design handoff friction.", name: "Daniel Wong", role: "UI designer", image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/userImage/userImage1.png" }
+        { 
+            text: "Toolzy AI has completely replaced three separate subscriptions for our agency. The Groq-powered article writer alone generates client drafts in seconds with zero fluff.", 
+            name: "Cristofer Levin", 
+            role: "Head of Content, StudioVelo", 
+            image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200",
+            tag: "ENTERPRISE"
+        },
+        { 
+            text: "The Stable Diffusion 3 integration is blindingly fast. We produce social visuals and product mockups without opening complex design suites.", 
+            name: "Rohan Mehta", 
+            role: "Founder & Creative Director", 
+            image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200",
+            tag: "STUDIO"
+        },
+        { 
+            text: "Being able to upload a raw resume PDF and get constructive ATS-friendly critique in under five seconds is unbelievable. My students love it.", 
+            name: "Sofia Martinez", 
+            role: "Career Coach & Tech Mentor", 
+            image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&h=100&auto=format&fit=crop",
+            tag: "CREATOR"
+        },
+        { 
+            text: "The precision background and object removal works every single time. It feels like magic. We shaved 15 hours a week off our e-commerce ops.", 
+            name: "Alex Turner", 
+            role: "Full Stack Engineer & Seller", 
+            image: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&auto=format&fit=crop&q=60",
+            tag: "FOUNDER"
+        },
+        { 
+            text: "Toolzy feels like software built by developers who understand velocity. It’s clean, brutalist, powerful, and doesn’t get in your way.", 
+            name: "Jason Kim", 
+            role: "Staff Product Designer", 
+            image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&auto=format&fit=crop&q=60",
+            tag: "DESIGNER"
+        },
+        { 
+            text: "The response time on Groq LPU is noticeably faster than anything we’ve benchmarked. Toolzy is now a foundational tool in our daily stack.", 
+            name: "Daniel Wong", 
+            role: "Technical Lead", 
+            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200",
+            tag: "DEV LEAD"
+        }
     ];
 
-    const rows = [
-        { start: 0, end: 3, className: "animate-scroll" },
-        { start: 3, end: 6, className: "animate-scroll-reverse" }
-    ];
+    const row1 = testimonials.slice(0, 3);
+    const row2 = testimonials.slice(3, 6);
 
-    const renderCard = (testimonial, index) => (
-        <div key={index} className="bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 shrink-0 w-[350px]">
-            <div className="flex mb-4">
-                 {Array(5).fill(0).map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-star text-transparent fill-[#737373]" aria-hidden="true"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg>
-                ))} 
-
-               
+    const renderCard = (t, i) => (
+        <div 
+            key={i} 
+            className="bg-white/[0.03] border border-white/[0.08] hover:border-white/20 rounded-2xl p-6 shrink-0 w-[360px] flex flex-col justify-between backdrop-blur-sm transition-all"
+        >
+            <div>
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex gap-1 text-[#FF4D26]">
+                        {Array(5).fill(0).map((_, idx) => (
+                            <Star key={idx} className="w-3.5 h-3.5 fill-[#FF4D26]" />
+                        ))}
+                    </div>
+                    <span className="text-[10px] font-mono-code uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/40">
+                        {t.tag}
+                    </span>
+                </div>
+                <p className="text-white/80 font-display text-sm leading-relaxed mb-6">
+                    "{t.text}"
+                </p>
             </div>
-            <p className="text-neutral-700 text-sm mb-6">{testimonial.text}</p>
-            <div className="flex items-center gap-3">
-                <img src={testimonial.image} alt={testimonial.name} className="w-11 h-11 rounded-full object-cover"/>
+
+            <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+                <img 
+                    src={t.image} 
+                    alt={t.name} 
+                    className="w-10 h-10 rounded-full object-cover border border-white/20 shrink-0" 
+                />
                 <div>
-                    <p className="font-medium text-neutral-800 text-sm">{testimonial.name}</p>
-                    <p className="text-neutral-600 text-sm">{testimonial.role}</p>
+                    <p className="font-display font-medium text-white text-sm">
+                        {t.name}
+                    </p>
+                    <p className="text-xs font-mono-code text-white/40">
+                        {t.role}
+                    </p>
                 </div>
             </div>
         </div>
     );
 
     return (
-        <>
+        <section id='testimonials' className="w-full bg-[#0A0A0C] text-white py-28 border-b border-white/[0.08] overflow-hidden relative">
             <style>
                 {`
-                    @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
-                    *{
-                        font-family: "Geist", sans-serif;
+                    @keyframes marqueeLeft {
+                        0% { transform: translateX(0); }
+                        100% { transform: translateX(-50%); }
                     }
-
-                    @keyframes scroll {
-                        0% {
-                            transform: translateX(0);
-                        }
-                        100% {
-                            transform: translateX(-50%);
-                        }
+                    @keyframes marqueeRight {
+                        0% { transform: translateX(-50%); }
+                        100% { transform: translateX(0); }
                     }
-                    @keyframes scrollReverse {
-                        0% {
-                            transform: translateX(-50%);
-                        }
-                        100% {
-                            transform: translateX(0);
-                        }
+                    .animate-marquee-left {
+                        animation: marqueeLeft 28s linear infinite;
                     }
-                    .animate-scroll {
-                        animation: scroll 15s linear infinite;
+                    .animate-marquee-right {
+                        animation: marqueeRight 28s linear infinite;
                     }
-                    .animate-scroll-reverse {
-                        animation: scrollReverse 15s linear infinite;
+                    .animate-marquee-left:hover, .animate-marquee-right:hover {
+                        animation-play-state: paused;
                     }
                 `}
             </style>
-            <section className="bg-[#F4F7FB] py-16 px-4">
-                <div className="max-w-6xl mx-auto">
 
-                    <div className="text-center mb-8">
-                        <div className="inline-block bg-neutral-100 border border-neutral-400 rounded-full px-4 py-1 mb-3">
-                            <span className="text-xs text-neutral-600">Loved by clients</span>
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 mb-16">
+                <div className="flex flex-col md:flex-row md:items-end justify-between pb-6 border-b border-white/10 gap-6">
+                    <div>
+                        <div className="flex items-center gap-2 text-xs font-mono-code uppercase tracking-widest text-[#FF4D26] mb-3">
+                            <span>✦ SOCIAL VALIDATION</span>
+                            <span>•</span>
+                            <span>VERIFIED USER FEEDBACK</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-medium text-neutral-900 mb-4">
-                            What people are saying
+                        <h2 className="font-editorial text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight text-white">
+                            Trusted By Fast Movers
                         </h2>
-                        <p className="text-neutral-600 text-sm max-w-96 mx-auto">
-                            Real feedback from founders, developers and teams building production-ready products.
-                        </p>
                     </div>
 
-                    <div className="space-y-6">
-                        {rows.map((row, rowIndex) => (
-                            <div key={rowIndex} className="relative overflow-hidden">
-                                <div className="absolute left-0 top-0 bottom-0 w-28 bg-linear-to-r from-[#F4F7FB] to-transparent z-10 pointer-events-none"></div>
-                                <div className="absolute right-0 top-0 bottom-0 w-28 bg-linear-to-l from-[#F4F7FB] to-transparent z-10 pointer-events-none"></div>
-
-                                <div className={`flex gap-6 ${row.className}`}>
-                                    {[...testimonials.slice(row.start, row.end), ...testimonials.slice(row.start, row.end)].map((testimonial, index) =>
-                                        renderCard(testimonial, index)
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <p className="max-w-md text-sm font-display text-white/60 leading-relaxed">
+                        Read unedited reviews from founders, agency operators, and solo creators shipping with Toolzy daily.
+                    </p>
                 </div>
-            </section>
-        </>
+            </div>
+
+            {/* Infinite Marquee Rows */}
+            <div className="space-y-6 relative">
+                {/* Gradient Fades for Smooth Edges */}
+                <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-r from-[#0A0A0C] to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-l from-[#0A0A0C] to-transparent z-10 pointer-events-none" />
+
+                <div className="flex gap-6 animate-marquee-left w-max">
+                    {[...row1, ...row1, ...row1].map((item, idx) => renderCard(item, idx))}
+                </div>
+
+                <div className="flex gap-6 animate-marquee-right w-max">
+                    {[...row2, ...row2, ...row2].map((item, idx) => renderCard(item, idx))}
+                </div>
+            </div>
+        </section>
     )
 }
 
