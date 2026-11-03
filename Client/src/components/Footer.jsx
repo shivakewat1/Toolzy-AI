@@ -1,118 +1,111 @@
 import React from 'react'
-import { ArrowUpRight, Github, Twitter, Linkedin, Sparkles } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const Footer = () => {
     const navigate = useNavigate()
 
     return (
-        <footer className='w-full bg-[#0A0A0C] text-white pt-24 pb-12 px-4 sm:px-8 lg:px-12 border-t border-white/[0.08] relative overflow-hidden'>
-            
-            {/* Top Grid */}
-            <div className='max-w-[1600px] mx-auto'>
+        <footer className="w-full bg-[#0A0A0C] text-neutral-400 border-t border-white/[0.08] pt-20 pb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
                 
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-20 border-b border-white/10'>
+                {/* Upper Footer Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-white/[0.08]">
                     
                     {/* Brand Info */}
-                    <div className='lg:col-span-5 space-y-6'>
-                        <div className='flex items-baseline gap-1'>
-                            <span className='font-editorial text-4xl tracking-tight text-white'>
-                                toolzy
+                    <div className="md:col-span-5 space-y-6">
+                        <div className='flex items-center gap-2'>
+                            <span className='font-display text-3xl tracking-tight text-white'>
+                                TOOLZY<span className='text-[#FF5520]'>.</span>
                             </span>
-                            <span className='w-2.5 h-2.5 rounded-full bg-[#FF4D26]' />
+                            <span className='border border-white/10 bg-white/[0.04] text-[10px] tracking-widest uppercase font-mono px-2 py-0.5 rounded text-neutral-400'>
+                                V2.4
+                            </span>
                         </div>
-                        <p className='text-sm text-white/60 font-display leading-relaxed max-w-sm'>
-                            Toolzy AI is a multimodal generative content studio. We orchestrate next-generation diffusion models, 
-                            large language models, and computer vision pipelines into one high-velocity creative platform.
+                        <p className="text-sm text-neutral-400 max-w-sm leading-relaxed">
+                            Experience the power of generative intelligence with Toolzy AI. Write articles, create stunning images, remove backgrounds, and streamline your creative workflow.
                         </p>
-                        
-                        <div className='flex items-center gap-3 pt-2 text-xs font-mono-code text-white/50'>
-                            <span className='inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse' />
-                            <span>ALL APIS OPERATIONAL • STATUS: NORMAL</span>
+                        <div className='flex items-center gap-2 text-xs font-mono text-neutral-500 uppercase tracking-widest'>
+                            <span className='inline-block w-2 h-2 rounded-full bg-emerald-500' />
+                            <span>All Systems Operational</span>
                         </div>
                     </div>
 
-                    {/* Navigation Columns */}
-                    <div className='lg:col-span-2 space-y-4'>
-                        <p className='text-xs font-mono-code uppercase tracking-widest text-[#FF4D26]'>
-                            Capabilities
-                        </p>
-                        <ul className='space-y-2.5 text-sm font-display text-white/70'>
-                            <li><a href='/ai/write-article' className='hover:text-white transition-colors'>Article Writer</a></li>
-                            <li><a href='/ai/blog-titles' className='hover:text-white transition-colors'>Blog Titles</a></li>
-                            <li><a href='/ai/generate-images' className='hover:text-white transition-colors'>Image Studio</a></li>
-                            <li><a href='/ai/remove-background' className='hover:text-white transition-colors'>Cutout Engine</a></li>
-                            <li><a href='/ai/remove-object' className='hover:text-white transition-colors'>Object Eraser</a></li>
-                            <li><a href='/ai/review-resume' className='hover:text-white transition-colors'>Resume Review</a></li>
-                        </ul>
-                    </div>
-
-                    <div className='lg:col-span-2 space-y-4'>
-                        <p className='text-xs font-mono-code uppercase tracking-widest text-[#FF4D26]'>
-                            Architecture
-                        </p>
-                        <ul className='space-y-2.5 text-sm font-display text-white/70'>
-                            <li><a href='#about' className='hover:text-white transition-colors'>System Overview</a></li>
-                            <li><a href='/ai/community' className='hover:text-white transition-colors'>Community Feed</a></li>
-                            <li><a href='#pricing' className='hover:text-white transition-colors'>Pro Membership</a></li>
-                            <li><a href='https://github.com/shivakewat1/Toolzy-AI' target='_blank' rel='noreferrer' className='hover:text-white transition-colors'>GitHub Repo</a></li>
-                        </ul>
-                    </div>
-
-                    {/* Newsletter / Early Access */}
-                    <div className='lg:col-span-3 space-y-4'>
-                        <p className='text-xs font-mono-code uppercase tracking-widest text-[#FF4D26]'>
-                            Dispatch
-                        </p>
-                        <p className='text-xs font-display text-white/60 leading-relaxed'>
-                            Weekly updates on newly deployed model weights, inference speed benchmarks, and prompt techniques.
-                        </p>
-                        <form onSubmit={(e) => e.preventDefault()} className='space-y-2'>
-                            <div className='flex items-center rounded-lg border border-white/15 bg-white/5 p-1 focus-within:border-[#FF4D26] transition-colors'>
-                                <input
-                                    type='email'
-                                    placeholder='creator@domain.com'
-                                    className='w-full bg-transparent px-3 py-1.5 text-xs text-white placeholder-white/40 outline-none font-mono-code'
-                                />
-                                <button className='bg-[#FF4D26] hover:bg-[#ff3810] text-white text-xs font-mono-code uppercase tracking-wider px-3 py-1.5 rounded transition-all active:scale-95 shrink-0'>
-                                    Join
+                    {/* Quick Links */}
+                    <div className="md:col-span-3 space-y-4">
+                        <h3 className="font-mono text-xs uppercase tracking-widest text-neutral-200">
+                            Navigation
+                        </h3>
+                        <ul className="text-sm space-y-2.5 font-medium">
+                            <li>
+                                <a href="#tools" className="hover:text-white transition-colors">
+                                    AI Tools Suite
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#about" className="hover:text-white transition-colors">
+                                    About Platform
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#pricing" className="hover:text-white transition-colors">
+                                    Pricing Plans
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#reviews" className="hover:text-white transition-colors">
+                                    Client Reviews
+                                </a>
+                            </li>
+                            <li>
+                                <button 
+                                    onClick={() => navigate('/ai/community')}
+                                    className="hover:text-[#FF5520] text-neutral-400 flex items-center gap-1 transition-colors cursor-pointer"
+                                >
+                                    Community Showcase <ArrowUpRight className='w-3 h-3' />
                                 </button>
-                            </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Newsletter */}
+                    <div className="md:col-span-4 space-y-4">
+                        <h3 className="font-mono text-xs uppercase tracking-widest text-neutral-200">
+                            Subscribe To Updates
+                        </h3>
+                        <p className="text-sm text-neutral-400">
+                            Get the latest updates, AI model releases, and tutorials directly to your inbox.
+                        </p>
+                        <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-2 pt-2">
+                            <input 
+                                className="bg-white/[0.04] border border-white/10 placeholder-neutral-500 focus:border-[#FF5520] outline-none w-full h-10 rounded-md px-3 text-sm text-white transition-colors"
+                                type="email" 
+                                placeholder="name@domain.com" 
+                            />
+                            <button 
+                                type="submit"
+                                className="bg-[#FF5520] hover:bg-[#E04615] text-white text-xs font-mono uppercase tracking-wider font-semibold px-4 h-10 rounded-md transition-colors cursor-pointer shrink-0"
+                            >
+                                Join
+                            </button>
                         </form>
                     </div>
 
                 </div>
 
-                {/* Gigantic Brutalist Watermark */}
-                <div className='py-12 select-none overflow-hidden'>
-                    <div className='font-editorial text-[90px] sm:text-[160px] md:text-[220px] lg:text-[280px] leading-none tracking-tight text-white/[0.04] uppercase text-center whitespace-nowrap font-black'>
-                        TOOLZY AI
-                    </div>
-                </div>
-
                 {/* Bottom Bar */}
-                <div className='pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-code text-white/40'>
+                <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono uppercase tracking-wider text-neutral-500">
                     <p>
-                        © 2026 TOOLZY AI. CRAFTED BY <span className='text-white/80 font-medium'>SHIVA KEWAT</span>.
+                        © 2026 Toolzy AI. Built with precision for modern creators.
                     </p>
-                    <div className='flex items-center gap-6'>
-                        <span>PRIVACY POLICY</span>
+                    <div className="flex items-center gap-6">
+                        <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
                         <span>•</span>
-                        <span>TERMS OF SERVICE</span>
-                        <span>•</span>
-                        <a 
-                            href='https://github.com/shivakewat1/Toolzy-AI' 
-                            target='_blank' 
-                            rel='noreferrer' 
-                            className='text-white/60 hover:text-[#FF4D26] transition-colors flex items-center gap-1'
-                        >
-                            SOURCE CODE <ArrowUpRight className='w-3 h-3' />
-                        </a>
+                        <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
                     </div>
                 </div>
 
             </div>
-
         </footer>
     )
 }

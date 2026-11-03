@@ -4,6 +4,7 @@ import user_group from "./user_group.png";
 import star_icon from "./star_icon.svg";
 import star_dull_icon from "./star_dull_icon.svg";
 import profile_img_1 from "./profile_img_1.png";
+import hero from './hero.png';
 import arrow_icon from "./arrow_icon.svg";
 import { SquarePen, Hash, Image, Eraser, Scissors, FileText } from 'lucide-react'
 import ai_gen_img_1 from "./ai_gen_img_1.png";
@@ -18,6 +19,10 @@ export const assets = {
     star_dull_icon,
     profile_img_1,
     arrow_icon,
+    hero,
+    ai_gen_img_1,
+    ai_gen_img_2,
+    ai_gen_img_3,
 };
 
 export const AiToolsData = [
